@@ -83,10 +83,16 @@ class PerkHandler(commands.Cog):
         type, message = message.split("]", 1)
 
         # All these logs should include hours survived
-        hours = re.search(r"Hours Survived: (\d+)", message).group(1)
+        match = re.search(r"Hours Survived: (\d+)", message)
+        if match is not None:
+            hours = match.group(1)
+        else:
+            hours = 0  # or handle appropriately
         user.hoursAlive = hours
-        if int(hours) > int(user.recordHoursAlive):
-            user.recordHoursAlive = hours
+        # hours = re.search(r"Hours Survived: (\d+)", message).group(1)
+        # user.hoursAlive = hours
+        # if int(hours) > int(user.recordHoursAlive):
+        #     user.recordHoursAlive = hours
 
         if type == "Died":
             user.died.append(timestamp)
