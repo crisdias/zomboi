@@ -10,7 +10,7 @@ class RCONAdapter(commands.Cog):
         self.bot = bot
         self.rconHost = os.getenv("RCON_HOST") if os.getenv("RCON_HOST") else "localhost"
         port = os.getenv("RCON_PORT")
-        if port is None:            
+        if port is None:
             self.rconPort = 27015
             self.bot.log.info("Using default port")
         else:
@@ -40,6 +40,17 @@ class RCONAdapter(commands.Cog):
                     await ctx.send("No matches found")
             except:
                 await ctx.send("Unable to send message")
+
+    @commands.command()
+    @has_permissions(administrator=True)
+    async def additem(self, ctx, name: str = None, item: str = None, amount: int = 1):
+        """Add item to a player"""
+        if name is None or item is None or amount is None:
+            await ctx.reply("requires three values: Name, item and amount")
+            return
+        with Client(self.rconHost, self.rconPort, passwd=self.rconPassword, timeout=5.0) as client:
+            result = client.run(f"additem \"{name}\" {item} {amount}")
+            await ctx.send(result)
 
     @commands.command()
     @has_permissions(administrator=True)
